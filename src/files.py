@@ -1,6 +1,6 @@
 from pathlib import Path
 
-def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path:list) ->tuple:
+def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path:list, priority:str) ->tuple:
     if(walk):
         pdf_files = [str(f) for f in Path(path).rglob('*.pdf') if f.is_file()]
     else:
@@ -12,7 +12,10 @@ def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path
         pdf_files = sorted(pdf_files, reverse=True)
     
     if(extra_files):
-        pdf_files += extra_files
+        if(priority == "dir"):
+            pdf_files += extra_files
+        else:
+            pdf_files = extra_files + pdf_files
         
     for item in exclude_path:
         if item in pdf_files:
@@ -20,7 +23,7 @@ def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path
     
     return tuple(pdf_files)
 
-def get_all_files(path: str, extra_files: list, walk:str, sort:str, exclude_path:list):
+def get_all_files(path: str, extra_files: list, walk:str, sort:str, exclude_path:list, priority: str):
     if(walk):
         all_files = [str(f) for f in Path(path).rglob('*') if f.is_file()]
     else:
@@ -32,7 +35,10 @@ def get_all_files(path: str, extra_files: list, walk:str, sort:str, exclude_path
         all_files = sorted(all_files, reverse=True)
     
     if(extra_files):
-        all_files += all_files
+        if(priority == "dir"):
+            pdf_files += extra_files
+        else:
+            pdf_files = extra_files + pdf_files
         
     for item in exclude_path:
         if item in all_files:

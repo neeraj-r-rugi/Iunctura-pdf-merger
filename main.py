@@ -46,15 +46,21 @@ def main() -> None:
                         action='store_true',
                         default=False, 
                         help="Weather to walk through and perform actions on sub-directories present in given context.Flag is type boolean, presence is True.")
-    parser.add_argument("--output", "-o",
+    parser.add_argument("--outputFile", "-of",
                         default="./pdfmc_merged.pdf",
-                        help="Name or path of the merged output file. Default: `./pdfmc_merged.pdf`.")
+                        type=util.enforce_pdf_path,
+                        help=f"Name or path of the merged output file.Usage: `./[fileName].pdf`. Default: `./pdfmc_merged.pdf`.")
+    parser.add_argument("--outputDir", "-od",
+                        default="./temp/",
+                        type=util.enforce_dir_path,
+                        help="Name or path of the merged output directory(). Usage: `./[dirName]/`. Default: `./temp/`.")
     
     
     user_args = parser.parse_args()
     user_args = {"mode": user_args.mode, "dir":user_args.directory,"file":user_args.file ,
                  "execlude":user_args.exclude, "order":user_args.order, 
-                 "priority":user_args.priority, "walk":user_args.walk, "output":user_args.output}
+                 "priority":user_args.priority, "walk":user_args.walk, 
+                 "outputFile":user_args.outputFile, "outputDir":user_args.outputDir}
     
     if(user_args["order"] == "asec"):
         user_args["file"] = sorted(user_args["file"])
@@ -65,16 +71,21 @@ def main() -> None:
         case "merge":
             all_files = files.get_pdf_files(user_args["dir"], user_args["file"], 
                                             user_args["walk"], user_args["order"], 
-                                            user_args["execlude"])
-            converter.save_pdf(all_files, user_args["output"]) 
+                                            user_args["execlude"], user_args["priority"])
+            converter.save_as_pdf(all_files, user_args["outputFile"]) 
             
         case "conv":
             all_files = files.get_all_files(user_args["dir"], user_args["file"], 
                                             user_args["walk"], user_args["order"], 
-                                            user_args["execlude"])
-            converter.convert_to_pdf(all_files)
+                                            user_args["execlude"], user_args["priority"])
+            filtered_paths = converter.convert_to_pdf(all_files, user_args["outputDir"])
+            print(filtered_paths)
         case "convmerge":
-            pass
+            all_files = files.get_all_files(user_args["dir"], user_args["file"], 
+                                            user_args["walk"], user_args["order"], 
+                                            user_args["execlude"], user_args["priority"])
+            
+            
 
 
 

@@ -22,18 +22,15 @@ ALLOWED_FORMATS = [
     ".xml", ".xhtml", ".epub",
 ]
 
-def save_pdf(paths: list, output_name:str):
+def save_as_pdf(paths: list, output_name:str):
     merger = pdf.PdfWriter()
     for file in paths:
         merger.append(str(file))
-    
-    if(not output_name.endswith(".pdf")):
-        output_name = output_name + ".pdf"
-    
+          
     merger.write(output_name)
     
     
-def convert_to_pdf(paths: list)-> tuple:
+def convert_to_pdf(paths: list, output_dir: str)-> tuple:
     soffice = process.get_soffice_path()
     if not soffice:
         print("Fatal Error: LibreOffice 'soffice' not found on your system.\nVerify if it exists on your PATH.")
@@ -50,10 +47,10 @@ def convert_to_pdf(paths: list)-> tuple:
 
     if not filtered_paths:
         print("No valid files to convert.")
-        return False
+        return ""
     
-    temp_dir = Path("./temp")
-    temp_dir.mkdir(exist_ok=True)
+    temp_dir = Path(output_dir)
+    temp_dir.mkdir(exist_ok=True, parents= True)
 
     for input_path in filtered_paths:
         try:
@@ -66,7 +63,7 @@ def convert_to_pdf(paths: list)-> tuple:
             
     temp = []
     for item in filtered_paths:
-        item = "./temp/"+str(item)
+        item = f"{output_dir}"+str(item)
         temp.append(item)
         
     filtered_paths = temp
