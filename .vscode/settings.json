@@ -1,9 +1,0 @@
-{
-  "editor.defaultFormatter": "ms-python.python",
-  "python.defaultInterpreterPath": "venv/bin/python",
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.python"
-  },
-  "python.formatting.provider": "black",
-  "editor.formatOnSave": true
-}
