@@ -1,9 +1,9 @@
-import sys
+
 import os
-import subprocess
 import shutil
 import platform
 import argparse
+from pathlib import Path
 
 def is_dir_valid(path: str) -> str:
     if(not os.path.isdir(path) and path):

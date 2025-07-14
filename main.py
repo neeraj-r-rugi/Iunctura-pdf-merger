@@ -24,7 +24,7 @@ def main() -> None:
                         type=util.is_dir_valid,
                         default="./",
                         help="The Directory of the file(s) to be merged or converted\nDefault: `./` i.e. the `PWD`")
-    parser.add_argument("--exclude", "-el",
+    parser.add_argument("--exclude", "-ex",
                         nargs="+",
                         type=util.is_valid_file,
                         default="",
@@ -63,10 +63,16 @@ def main() -> None:
         
     match(user_args["mode"]):
         case "merge":
-            all_files = files.get_pdf_files(user_args["dir"], user_args["file"], user_args["walk"], user_args["order"])
+            all_files = files.get_pdf_files(user_args["dir"], user_args["file"], 
+                                            user_args["walk"], user_args["order"], 
+                                            user_args["execlude"])
             converter.save_pdf(all_files, user_args["output"]) 
+            
         case "conv":
-            all_files = files.get_all_files(user_args["dir"], user_args["file"], user_args["walk"], user_args["order"])
+            all_files = files.get_all_files(user_args["dir"], user_args["file"], 
+                                            user_args["walk"], user_args["order"], 
+                                            user_args["execlude"])
+            converter.convert_to_pdf(all_files)
         case "convmerge":
             pass
 
