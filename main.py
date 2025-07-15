@@ -2,16 +2,15 @@
 
 #system Imports
 import argparse
+from pathlib import Path
+import shutil
 
 #Source files
 import src.process as util
 import src.files as files
 import src.conersion as converter
 
-def main() -> None:
-    """
-    Program execution begins here.
-    """
+def init_parser()->argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pdfMerger", description="A tool to merge or convert PDF's in a directory")
     parser.add_argument(
                         "--mode", "-m", 
@@ -35,9 +34,10 @@ def main() -> None:
                         default="",
                         help="File(s) to be opertaed upon. Works on individual file rather than complete directory.\nDefault: `NULL`")
     parser.add_argument("--order", "-ord",
-                        choices=["asec", "desc"],
-                        default="asc",
-                        help="Choose weather the files are sorted in ascending(`asec`) or desecnding(`desc`) order.\nDefault: `asec`")
+                        choices=["none","asec", "desc"],
+                        default="none",
+                        help="Choose weather the files are sorted in ascending(`asec`), desecnding(`desc`) order, or no order(system determined)(`none`).\nDefault: `none`.\
+                        Note: The sorting is done on the filename and not on the names of the sub-directories.")
     parser.add_argument("--priority", "-pr",
                         choices=["file", "dir"],
                         default="dir",
@@ -51,10 +51,18 @@ def main() -> None:
                         type=util.enforce_pdf_path,
                         help=f"Name or path of the merged output file.Usage: `./[fileName].pdf`. Default: `./pdfmc_merged.pdf`.")
     parser.add_argument("--outputDir", "-od",
-                        default="./temp/",
+                        default="temp/",
                         type=util.enforce_dir_path,
                         help="Name or path of the merged output directory(). Usage: `./[dirName]/`. Default: `./temp/`.")
     
+    return parser
+
+def main() -> None:
+    """
+    Program execution begins here.
+    """
+    
+    parser = init_parser()
     
     user_args = parser.parse_args()
     user_args = {"mode": user_args.mode, "dir":user_args.directory,"file":user_args.file ,
@@ -62,28 +70,43 @@ def main() -> None:
                  "priority":user_args.priority, "walk":user_args.walk, 
                  "outputFile":user_args.outputFile, "outputDir":user_args.outputDir}
     
+    #sort files provided via the `files` parameter
     if(user_args["order"] == "asec"):
-        user_args["file"] = sorted(user_args["file"])
+        user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower())
+    elif(user_args["order"] == "desc"):
+        user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower(), reverse=True)
     else:
-        user_args["file"] = sorted(user_args["file"], reverse=True)
+        pass
         
+    print("Beginning Operations....\n")
     match(user_args["mode"]):
         case "merge":
-            all_files = files.get_pdf_files(user_args["dir"], user_args["file"], 
+            all_files = tuple(files.get_pdf_files(user_args["dir"], user_args["file"], 
                                             user_args["walk"], user_args["order"], 
-                                            user_args["execlude"], user_args["priority"])
-            converter.save_as_pdf(all_files, user_args["outputFile"]) 
+                                            user_args["execlude"], user_args["priority"]))
+            converter.save_as_pdf(all_files, user_args["outputFile"])
+            print(f"\n\nMerged Files: {all_files}\nin that order.\n\n") 
             
         case "conv":
-            all_files = files.get_all_files(user_args["dir"], user_args["file"], 
+            all_files = tuple(files.get_all_files(user_args["dir"], user_args["file"], 
                                             user_args["walk"], user_args["order"], 
-                                            user_args["execlude"], user_args["priority"])
+                                            user_args["execlude"], user_args["priority"]))
             filtered_paths = converter.convert_to_pdf(all_files, user_args["outputDir"])
-            print(filtered_paths)
+            print(f"Files saved: \n{filtered_paths} \nin dir: {user_args["outputDir"]}")
         case "convmerge":
             all_files = files.get_all_files(user_args["dir"], user_args["file"], 
                                             user_args["walk"], user_args["order"], 
                                             user_args["execlude"], user_args["priority"])
+            filtered_paths = converter.convert_to_pdf(all_files, user_args["outputDir"])
+            all_files = files.merge_filtered_path(all_files, filtered_paths)
+            converter.save_as_pdf(all_files, user_args["outputFile"])
+            print(f"\n\nMerged Files: {all_files}\nin that order.\n\n")
+            shutil.rmtree(user_args["outputDir"])
+            
+            
+    print(f"Completed all Operations\n{"*"*50}")
+             
+            
             
             
 

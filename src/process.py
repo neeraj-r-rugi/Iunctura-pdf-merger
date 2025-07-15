@@ -5,24 +5,19 @@ import platform
 import argparse
 from pathlib import Path
 
+from pathlib import Path
+
 def enforce_pdf_path(file_name: str) -> str:
-    # Extract the base name (without directory)
-    base_name = os.path.basename(file_name)
-    
-    # Remove extension if any, then add .pdf
-    name_without_ext = os.path.splitext(base_name)[0]
-    
-    # Construct the enforced path
-    return f"{name_without_ext}.pdf"
+    path = Path(file_name)
+    return str(path.with_suffix('.pdf'))
+
+
 
 
 
 def enforce_dir_path(dir_path: str) -> str:
-    # Get the last part of the path
-    dir_name = os.path.basename(os.path.normpath(dir_path))
-    
-    # Return in the form ./[dirName]/
-    return f"{dir_name}/"
+    path = Path(dir_path)
+    return str(path.as_posix().rstrip('/')) + '/'
 
 
 

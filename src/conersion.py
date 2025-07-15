@@ -36,14 +36,13 @@ def convert_to_pdf(paths: list, output_dir: str)-> tuple:
         print("Fatal Error: LibreOffice 'soffice' not found on your system.\nVerify if it exists on your PATH.")
         sys.exit()
 
-    # Filter out unsupported files (if not already done earlier)
     filtered_paths = []
     for item in paths:
         file = Path(item)
         if file.suffix.lower() in ALLOWED_FORMATS:
             filtered_paths.append(file)
         else:
-            print(f"[rejected] `{item}`: not valid filetype")
+           pass
 
     if not filtered_paths:
         print("No valid files to convert.")
@@ -58,17 +57,20 @@ def convert_to_pdf(paths: list, output_dir: str)-> tuple:
                 soffice, "--headless", "--convert-to", "pdf",
                 str(input_path), "--outdir", str(temp_dir)
             ], check=True)
+            print(f"[Converting] {input_path} to pdf")
         except subprocess.CalledProcessError as e:
             print(f"Error converting `{input_path}`: {e}")
             
     temp = []
+    
     for item in filtered_paths:
-        item = f"{output_dir}"+str(item)
+        item = item.with_suffix(".pdf")
+        item = f"{output_dir}"+str(Path(item).name)
         temp.append(item)
         
     filtered_paths = temp
         
-    return tuple(filtered_paths)
+    return filtered_paths
     
 
     
