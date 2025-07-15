@@ -1,4 +1,7 @@
-
+"""
+Developed by Neeraj R Rugi
+Under GNU GPL License 
+"""
 
 #system Imports
 import argparse
