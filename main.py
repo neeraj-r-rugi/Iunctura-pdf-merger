@@ -70,6 +70,10 @@ def main() -> None:
                  "priority":user_args.priority, "walk":user_args.walk, 
                  "outputFile":user_args.outputFile, "outputDir":user_args.outputDir}
     
+    if(user_args["dir"] == "" and user_args["file"] == ""):
+        print(f"No Files to Process\nProgram Terminated\n{"*"*50}")
+        return
+    
     #sort files provided via the `files` parameter
     if(user_args["order"] == "asec"):
         user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower())
