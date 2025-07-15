@@ -259,4 +259,4 @@ Make sure all specified paths exist and are accessible before running the progra
   Example:  
   ✅ `C:/Users/Me/Documents/file.pdf`  
   ❌ `C:\Users\Me\Documents\file.pdf`  
-  While type checking and normalization are handled internally, using consistent formatting reduces errors and improves reliability.
+  While type checking and normalization are handled internally, using consistent formatting reduces errors and improves reliability. All paths/filenames entered must be either relative path with respect to the terminal context, or the absolute path of the file.

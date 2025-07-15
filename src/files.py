@@ -16,7 +16,6 @@ def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path
         else:
             pass
         
-    print(f"{pdf_files}, {path}")
     
     if(extra_files):
         if(priority == "dir"):
