@@ -12,6 +12,7 @@ import shutil
 import src.process as util
 import src.files as files
 import src.conersion as converter
+import src.errors as error
 
 def init_parser()->argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pdfMerger", description="A tool to merge or convert PDF's in a directory")
@@ -81,19 +82,22 @@ def main() -> None:
                  "priority":user_args.priority, "walk":user_args.walk, 
                  "outputFile":user_args.outputFile, "outputDir":user_args.outputDir,
                  "showFiles":user_args.showFiles, "keepDir":user_args.keepDir}
-    
-    if(user_args["dir"] == "" and user_args["file"] == ""):
-        print(f"No Files to Process\nProgram Terminated\n{"*"*50}")
-        return
+    try:
+        if(user_args["dir"] == "" and user_args["file"] == ""):
+            raise error.fileNotFoundError("No Files to Evaluate.")
+    except Exception as e:
+        print(e)
     
     #sort files provided via the `files` parameter
-    if(user_args["order"] == "asec"):
-        user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower())
-    elif(user_args["order"] == "desc"):
-        user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower(), reverse=True)
-    else:
-        pass
-        
+    try:
+        if(user_args["order"] == "asec"):
+            user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower())
+        elif(user_args["order"] == "desc"):
+            user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower(), reverse=True)
+        else:
+            pass
+    except Exception as e:
+        print(f"Failed to Order External Files: {e}")
     print(f"Beginning Operations....\n\n{"#"*50}")
     match(user_args["mode"]):
         case "merge":

@@ -4,6 +4,7 @@ from . import process
 from pathlib import Path
 import subprocess
 import sys
+from . import errors as error
 
 ALLOWED_FORMATS = [
     # Text Documents
@@ -34,8 +35,7 @@ def save_as_pdf(files: list, output_name:str):
 def convert_to_pdf(paths: list, output_dir: str)-> tuple:
     soffice = process.get_soffice_path()
     if not soffice:
-        print("Fatal Error: LibreOffice 'soffice' not found on your system.\nVerify if it exists on your PATH.")
-        sys.exit()
+        raise error.sofficeNotPresentError("Fatal Error: LibreOffice 'soffice' not found on your system.\nVerify if it exists on your PATH.")
 
     filtered_paths = []
     for item in paths:
@@ -62,11 +62,12 @@ def convert_to_pdf(paths: list, output_dir: str)-> tuple:
             print(f"-------> [Converted] {input_path} to PDF\n{"*"*75}")
         except subprocess.CalledProcessError as e:
             print(f"Error converting `{input_path}`: {e}")
+            raise error.failedToConvertToPDFError(f"Soffice Conversion Failure")  
             
     temp = []
     
     for item in filtered_paths:
-        item = item.with_suffix(".pdf")
+        item:Path = item.with_suffix(".pdf")
         item = f"{output_dir}"+str(Path(item).name)
         temp.append(item)
         

@@ -76,6 +76,25 @@ python3 main.py -m convmerge
 # or with binary
 iunctura -m convmerge
 ```
+```bash
+#Allowed Formats for Conversion using Soffice
+ALLOWED_FORMATS = [
+    # Text Documents
+    ".doc", ".docx", ".odt", ".rtf", ".txt", ".fodt", ".html", ".htm",
+    
+    # Spreadsheets
+    ".xls", ".xlsx", ".ods", ".csv", ".fods",
+    
+    # Presentations
+    ".ppt", ".pptx", ".odp", ".fodp",
+    
+    # Drawings
+    ".odg", ".fodg", ".svg", ".emf", ".wmf",
+    
+    # Other Office Formats
+    ".xml", ".xhtml", ".epub",
+]
+```
 
 ### Directory Selection (`--directory`, `-dir`)
 
