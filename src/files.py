@@ -2,9 +2,9 @@ from pathlib import Path
 
 def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path:list, priority:str) ->tuple:
     pdf_files = []
-    if(not isinstance(path, list)):
-        path = [path]
     if(path and any(dir.strip() for dir in path)):
+        if(not isinstance(path, list)):
+            path = [path]
         for dir in path: 
             if(walk):
                 pdf_files += [str(f) for f in Path(dir).rglob('*.pdf') if f.is_file()]
@@ -33,9 +33,9 @@ def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path
 
 def get_all_files(path: list, extra_files: list, walk:str, sort:str, exclude_path:list, priority: str):
     all_files = []
-    if(not isinstance(path, list)):
-        path = [path]
     if(path and any(dir.strip() for dir in path)):
+        if(not isinstance(path, list)):
+            path = [path]
         for dir in path:
             if(walk):
                 all_files += [str(f) for f in Path(dir).rglob('*') if f.is_file()]
