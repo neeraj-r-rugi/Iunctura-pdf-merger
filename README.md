@@ -16,9 +16,39 @@ Iunctura is a command-line utility that can:
 ## Basic Usage
 Note: All Examples shown on Linux Machine.
 
+### Running with Python
 ```bash
 python3 main.py [options]
 ```
+
+### Using the Binary (Recommended)
+For easier usage, you can use the provided binary or create your own:
+
+**Using the provided binary:**
+```bash
+# If binary is in your PATH
+iunctura [options]
+
+# If binary is in current directory
+./iunctura [options]
+```
+
+**Creating your own binary with PyInstaller:**
+```bash
+# Install PyInstaller
+pip install pyinstaller
+
+# Create binary
+pyinstaller --onefile main.py --name iunctura
+
+# Move to system PATH (Linux/Mac)
+sudo mv dist/iunctura /usr/local/bin/
+
+# Or add to PATH (Windows)
+# Move iunctura.exe to a directory in your PATH
+```
+
+Once the binary is in your system PATH, you can use `iunctura` from anywhere on your system.
 
 ## Command Line Arguments
 
@@ -33,12 +63,18 @@ Controls the primary operation mode:
 ```bash
 # Merge existing PDFs only
 python3 main.py --mode merge
+# or with binary
+iunctura --mode merge
 
 # Convert files to PDF
 python3 main.py -m conv
+# or with binary
+iunctura -m conv
 
 # Convert and merge in one operation
 python3 main.py -m convmerge
+# or with binary
+iunctura -m convmerge
 ```
 
 ### Directory Selection (`--directory`, `-dir`)
@@ -48,12 +84,18 @@ Specify one or more directories to process. Accepts multiple directory paths.
 ```bash
 # Process current directory (default)
 python3 main.py
+# or with binary
+iunctura
 
 # Process specific directory
 python3 main.py --directory /path/to/pdfs/
+# or with binary
+iunctura --directory /path/to/pdfs/
 
 # Process multiple directories
 python3 main.py -dir ./docs/ ./reports/ ./archives/
+# or with binary
+iunctura -dir ./docs/ ./reports/ ./archives/
 ```
 
 ### File Exclusion (`--exclude`, `-ex`)
@@ -180,6 +222,8 @@ Merge all PDFs in the current directory:
 
 ```bash
 python3 main.py
+# or with binary
+iunctura
 ```
 
 ### Merge with Custom Output
@@ -188,6 +232,8 @@ Merge PDFs with a specific output filename:
 
 ```bash
 python3 main.py --outputFile ./monthly_reports.pdf
+# or with binary
+iunctura --outputFile ./monthly_reports.pdf
 ```
 
 ### Convert and Merge Mixed Files
@@ -260,6 +306,7 @@ python3 main.py --mode convmerge --keepDir --outputDir ./debug_temp/
 5. **Backup**: Always backup original files before processing, especially with conversion operations
 6. **Order Matters**: Use `--order` when the sequence of merged content is important. Using `none` leaves it to the mercy of your computers filesystem.
 7. **Debugging**: Use `--keepDir` to preserve temporary files when troubleshooting conversion issues
+8. **Binary Usage**: For convenience, use the provided binary or create your own with PyInstaller and add it to your system PATH
 
 ## Default Behavior
 
