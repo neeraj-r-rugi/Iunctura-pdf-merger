@@ -307,6 +307,7 @@ python3 main.py --mode convmerge --keepDir --outputDir ./debug_temp/
 6. **Order Matters**: Use `--order` when the sequence of merged content is important. Using `none` leaves it to the mercy of your computers filesystem.
 7. **Debugging**: Use `--keepDir` to preserve temporary files when troubleshooting conversion issues
 8. **Binary Usage**: For convenience, use the provided binary or create your own with PyInstaller and add it to your system PATH
+9. **Same File Names**: Files with same name may be overwritten even if they are of different type as internally all names are normalised to pdf before merging hence conflicts may arise.
 
 ## Default Behavior
 
