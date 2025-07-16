@@ -54,9 +54,17 @@ def init_parser()->argparse.ArgumentParser:
                         type=util.enforce_pdf_path,
                         help=f"Name or path of the merged output file.Usage: `./[fileName].pdf`. Default: `./pdfmc_merged.pdf`.")
     parser.add_argument("--outputDir", "-od",
-                        default="temp/",
+                        default="./temp/",
                         type=util.enforce_dir_path,
                         help="Name or path of the merged output directory(). Usage: `./[dirName]/`. Default: `./temp/`.")
+    parser.add_argument("--showFiles", "-sf",
+                        action= 'store_true',
+                        default=False,
+                        help="Shows all the files and the order in which the the files would be operated on. Does not perfrom any operation.")
+    parser.add_argument("-keepDir", "-ke",
+                        action="store_true",
+                        default= False,
+                        help="Weather to keep the temporary output directory used during convmerge operation.")
     
     return parser
 
@@ -71,7 +79,8 @@ def main() -> None:
     user_args = {"mode": user_args.mode, "dir":user_args.directory,"file":user_args.file ,
                  "execlude":user_args.exclude, "order":user_args.order, 
                  "priority":user_args.priority, "walk":user_args.walk, 
-                 "outputFile":user_args.outputFile, "outputDir":user_args.outputDir}
+                 "outputFile":user_args.outputFile, "outputDir":user_args.outputDir,
+                 "showFiles":user_args.showFiles, "keepDir":user_args.keepDir}
     
     if(user_args["dir"] == "" and user_args["file"] == ""):
         print(f"No Files to Process\nProgram Terminated\n{"*"*50}")
@@ -85,30 +94,46 @@ def main() -> None:
     else:
         pass
         
-    print("Beginning Operations....\n")
+    print(f"Beginning Operations....\n\n{"#"*50}")
     match(user_args["mode"]):
-        case "merge":
-            all_files = tuple(files.get_pdf_files(user_args["dir"], user_args["file"], 
-                                            user_args["walk"], user_args["order"], 
-                                            user_args["execlude"], user_args["priority"]))
-            converter.save_as_pdf(all_files, user_args["outputFile"])
-            print(f"\n\nMerged Files: {all_files}\nin that order.\n\n") 
-            
-        case "conv":
-            all_files = tuple(files.get_all_files(user_args["dir"], user_args["file"], 
-                                            user_args["walk"], user_args["order"], 
-                                            user_args["execlude"], user_args["priority"]))
-            filtered_paths = converter.convert_to_pdf(all_files, user_args["outputDir"])
-            print(f"Files saved: \n{filtered_paths} \nin dir: {user_args["outputDir"]}")
-        case "convmerge":
-            all_files = files.get_all_files(user_args["dir"], user_args["file"], 
-                                            user_args["walk"], user_args["order"], 
-                                            user_args["execlude"], user_args["priority"])
-            filtered_paths = converter.convert_to_pdf(all_files, user_args["outputDir"])
-            all_files = files.merge_filtered_path(all_files, filtered_paths)
-            converter.save_as_pdf(all_files, user_args["outputFile"])
-            print(f"\n\nMerged Files: {all_files}\nin that order.\n\n")
-            shutil.rmtree(user_args["outputDir"])
+            case "merge":
+                all_files = tuple(files.get_pdf_files(user_args["dir"], user_args["file"], 
+                                                user_args["walk"], user_args["order"], 
+                                                user_args["execlude"], user_args["priority"]))
+                if(not user_args["showFiles"]):
+                    converter.save_as_pdf(all_files, user_args["outputFile"])
+                    if(all_files):
+                        print(f"\n\nMerged Files: {all_files}\nIn that order.\n\n")
+                    else:
+                        print("No Files to convert in the given context(s).")
+                else:
+                    print(f"The files that will be processed are:\n{all_files}\nIn that order. With output file being stored in: {user_args['outputFile']}")
+                
+            case "conv":
+                all_files = tuple(files.get_all_files(user_args["dir"], user_args["file"], 
+                                                user_args["walk"], user_args["order"], 
+                                                user_args["execlude"], user_args["priority"]))
+                if(not user_args["showFiles"]):
+                    filtered_paths = converter.convert_to_pdf(all_files, user_args["outputDir"])
+                    print(f"Files saved: \n{filtered_paths} \nin dir: {user_args["outputDir"]}")
+                else:
+                    print(f"The files that will be converted are: \n{all_files}. And would be stored in temporary directory: {user_args['outputDir']}")
+            case "convmerge":
+                all_files = files.get_all_files(user_args["dir"], user_args["file"], 
+                                                user_args["walk"], user_args["order"], 
+                                                user_args["execlude"], user_args["priority"])
+                filtered_paths = converter.convert_to_pdf(all_files, user_args["outputDir"])
+                all_files = files.merge_filtered_path(all_files, filtered_paths)
+                pdf_files = [file for file in all_files if Path(file).suffix == ".pdf"]
+                if(not user_args["showFiles"]):
+                    converter.save_as_pdf(pdf_files, user_args["outputFile"])
+                    print(f"\n\nMerged Files: {pdf_files}\nIn that order.\n\n")
+                    if(not user_args["keepDir"]):
+                        shutil.rmtree(user_args["outputDir"])
+                else:
+                    print(f"The Files that will be processed are\n: {pdf_files}\nIn that order.With File name: {user_args['outputFile']}, and Temporary directory being: {user_args["outputDir"]}")
+                    if(not user_args["keepDir"]):
+                        shutil.rmtree(user_args["outputDir"])
             
             
     print(f"Completed all Operations\n{"*"*50}")
