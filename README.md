@@ -1,7 +1,8 @@
 # IuncturaPdfMerger 
 Tired of having to manually convert and merge your lecture slides? Well fear not as Iunctura Is here to save the day!
+
 ## What is Iunctura?
-It is s comprehensive tool to merge and convert PDF files in directories with flexible options for file handling and organization.
+It is a comprehensive tool to merge and convert PDF files in directories with flexible options for file handling and organization.
 
 ## Overview
 
@@ -70,8 +71,7 @@ python3 main.py -ex file1.pdf file2.docx unwanted.txt
 ### Individual File Processing (`--file`, `-f`)
 
 Used to combine specific files with entire directories or process individual files.
-Note: It does not override directory file processing, it just adds on to the directory files. Unless explicitly stated by setting dir parameter to ```""```.
-
+Note: It does not override directory file processing, it just adds on to the directory files. Unless explicitly stated by setting dir parameter to `""`.
 
 ```bash
 # Process specific files
@@ -106,6 +106,7 @@ When both `--file` and `--directory` are specified, this determines processing a
 
 - **`dir`** (default): Process directory files first, then individual files
 - **`file`**: Process individual files first, then directory files
+
 ```bash
 # Process individual files before directory files
 python3 main.py --file important.pdf -dir ./docs/ --priority file
@@ -145,6 +146,30 @@ python3 main.py --outputDir ./conversion_temp/
 
 # Different temp location
 python3 main.py -od /tmp/pdfmerger_work/
+```
+
+### Show Files Preview (`--showFiles`, `-sf`)
+
+Display all files and the order in which they would be processed without performing any actual operations. This is useful for testing and verification.
+
+```bash
+# Preview files that would be processed
+python3 main.py --showFiles
+
+# Preview with specific settings
+python3 main.py -sf --directory ./docs/ --order asec --walk
+```
+
+### Keep Temporary Directory (`--keepDir`, `-ke`)
+
+Preserve the temporary output directory used during conversion and merge operations instead of cleaning it up automatically.
+
+```bash
+# Keep temporary files after processing
+python3 main.py --keepDir
+
+# Useful for debugging conversion issues
+python3 main.py -ke --mode convmerge --outputDir ./debug_temp/
 ```
 
 ## Common Use Cases
@@ -204,6 +229,22 @@ python3 main.py \
     --outputDir ./temp_conversion/
 ```
 
+### Preview Before Processing
+
+Check which files would be processed and in what order:
+
+```bash
+python3 main.py --showFiles --directory ./reports/ --order asec
+```
+
+### Debug Conversion Issues
+
+Keep temporary files to troubleshoot conversion problems:
+
+```bash
+python3 main.py --mode convmerge --keepDir --outputDir ./debug_temp/
+```
+
 ## File Type Support
 
 - **PDF files**: Directly merged (merge mode)
@@ -215,9 +256,10 @@ python3 main.py \
 1. **File Naming**: Use descriptive names for output files to avoid confusion
 2. **Directory Structure**: Organize files logically before processing for better results
 3. **Exclusions**: Use `--exclude` to skip temporary files, templates, or work-in-progress documents
-4. **Testing**: Run with a small subset of files first to verify settings
+4. **Testing**: Run with `--showFiles` first to verify file selection and order before processing
 5. **Backup**: Always backup original files before processing, especially with conversion operations
 6. **Order Matters**: Use `--order` when the sequence of merged content is important. Using `none` leaves it to the mercy of your computers filesystem.
+7. **Debugging**: Use `--keepDir` to preserve temporary files when troubleshooting conversion issues
 
 ## Default Behavior
 
@@ -227,6 +269,8 @@ When run without arguments, pdfMerger will:
 - Use system-determined file order
 - Prioritize directory processing over individual files
 - Not walk subdirectories
+- Not show files preview
+- Not keep temporary directories
 - Output to `./pdfmc_merged.pdf`
 - Use `./temp/` as the temporary directory
 
@@ -245,12 +289,12 @@ Make sure all specified paths exist and are accessible before running the progra
 - 📝 **PDF Conversion Requires LibreOffice**  
   While this tool can merge PDF files out of the box, converting other file types (such as `.docx`, `.odt`, `.txt`, etc.) to PDF requires the **LibreOffice suite** to be installed on your system.  
   The tool uses the `soffice` command in **headless mode** via `subprocess`.  
-  - Ensure `libreoffice` or `soffice` is in your system’s `PATH`.
+  - Ensure `libreoffice` or `soffice` is in your system's `PATH`.
   - Uses: `soffice --headless --convert-to pdf <input-file> --outdir <output-dir>`
-  - To install using apt: ```sudo apt install libreoffice``` for windows intall from the official LibreOffice Website!
+  - To install using apt: `sudo apt install libreoffice` for windows intall from the official LibreOffice Website!
 
 - 🔢 **Ordering Merged Files**  
-  To merge files in a specific order from a directory, it’s recommended to **prefix filenames with numbers**.  
+  To merge files in a specific order from a directory, it's recommended to **prefix filenames with numbers**.  
   Example: `1_intro.pdf`, `2_chapter.pdf`, `3_summary.pdf`  
   Then, use the `--order` parameter to maintain this sequence during the merge.
 
