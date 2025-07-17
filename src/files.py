@@ -70,20 +70,28 @@ def get_all_files(path: list, extra_files: list, walk:str, sort:str, exclude_pat
 
 def merge_filtered_path(all_files: list, filtered_paths: list) -> list:
     try:
+
         path_map = {
-            Path(p).with_suffix(".pdf").name.lower(): p
+            Path(p).stem.lower(): p
             for p in filtered_paths
+            if Path(p).suffix.lower() == ".pdf"
         }
 
         result = []
         for file in all_files:
-            file_name_pdf = Path(file).with_suffix(".pdf").name.lower()
-            replacement = path_map.get(file_name_pdf, file)
-            result.append(replacement)
+            path = Path(file)
+            if path.suffix.lower() != ".pdf":
+                # This was a converted file, try to replace it
+                replacement = path_map.get(path.stem.lower(), file)
+                result.append(replacement)
+            else:
+                # Already a .pdf — keep as is
+                result.append(file)
+
+        return result
     except Exception as e:
         print(f"Failed to merge and filter files: {e}")
-
-    return result
+        return all_files
         
     
 
