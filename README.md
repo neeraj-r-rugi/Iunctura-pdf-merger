@@ -390,6 +390,6 @@ Make sure all specified paths exist and are accessible before running the progra
   |Combining Multiple Directories | ![.](./media/6.png) |
   |Show File order without any operation | ![.](./media/8.png) |
   |Alter Order of Operation Of Files | ![.](./media/10.png) | 
-  |Change Priorit Of Operation, Between Directory and File| ![.](./media/11.png) |
+  |Change Priority Of Operation, Between Directory and File| ![.](./media/11.png) |
   |Keeping Temporary Directory And It's Renaming | ![.](./media/12_1.png) ![.](./media/12_2.png)
 
