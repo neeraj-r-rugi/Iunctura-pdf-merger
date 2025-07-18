@@ -13,6 +13,11 @@ Iunctura is a command-line utility that can:
 - Process files from specific directories or individual files
 - Handle subdirectories recursively
 
+## Requirements:
+- All `Python` Modules from `requirments.txt`.
+- LibreOffice for Converting Files[Maybe left as optional if you do not intend to convert any files].
+- Version of Python: `Python 3.10` or Higher as `match` case is used.
+
 ## Basic Usage
 Note: All Examples shown on Linux Machine.
 
@@ -358,7 +363,7 @@ Make sure all specified paths exist and are accessible before running the progra
   The tool uses the `soffice` command in **headless mode** via `subprocess`.  
   - Ensure `libreoffice` or `soffice` is in your system's `PATH`.
   - Uses: `soffice --headless --convert-to pdf <input-file> --outdir <output-dir>`
-  - To install using apt: `sudo apt install libreoffice` for windows intall from the official LibreOffice Website!
+  - To install using apt: `sudo apt install libreoffice` for windows install from the official LibreOffice Website!: https://www.libreoffice.org/download/download-libreoffice/
 
 - 🔢 **Ordering Merged Files**  
   To merge files in a specific order from a directory, it's recommended to **prefix filenames with numbers**.  
@@ -371,3 +376,20 @@ Make sure all specified paths exist and are accessible before running the progra
   ✅ `C:/Users/Me/Documents/file.pdf`  
   ❌ `C:\Users\Me\Documents\file.pdf`  
   While type checking and normalization are handled internally, using consistent formatting reduces errors and improves reliability. All paths/filenames entered must be either relative path with respect to the terminal context, or the absolute path of the file.
+
+## Some ScreenShots to help you out:
+  | Feature | Preview |
+  |---------|---------|
+  | Help | ![.](./media/9.png) |
+  |Merge| ![.](./media/1.png)|
+  |Convert | ![.](./media/7_1.png) ![.](./media/7_2.png)|
+  |Convert and Merge| ![.](./media/2.png)|
+  |Exclude a file| ![.](./media/3.png) |
+  |Merging Individual Files| ![.](./media/4.png) |
+  |Custom Output File Name | ![.](./media/5.png) |
+  |Combining Multiple Directories | ![.](./media/6.png) |
+  |Show File order without any operation | ![.](./media/8.png) |
+  |Alter Order of Operation Of Files | ![.](./media/10.png) | 
+  |Change Priorit Of Operation, Between Directory and File| ![.](./media/11.png) |
+  |Keeping Temporary Directory And It's Renaming | ![.](./media/12_1.png) ![.](./media/12_2.png)
+
