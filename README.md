@@ -36,6 +36,15 @@ iunctura [options]
 
 # If binary is in current directory
 ./iunctura [options]
+
+#or rename to something simple such as `pdfmc` Then as shown in Screen Shot:
+
+# If binary is in your PATH
+pdfmc [options]
+
+# If binary is in current directory
+./pdfmc [options]
+
 ```
 
 **Creating your own binary with PyInstaller:**
