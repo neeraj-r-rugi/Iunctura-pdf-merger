@@ -1,6 +1,44 @@
 # IuncturaPdfMerger 
 Tired of having to manually convert and merge your lecture slides? Well fear not as Iunctura Is here to save the day!
 
+## Table of Contents
+
+- [What is Iunctura?](#what-is-iunctura)
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Basic Usage](#basic-usage)
+  - [Running with Python](#running-with-python)
+  - [Using the Binary (Recommended)](#using-the-binary-recommended)
+- [Command Line Arguments](#command-line-arguments)
+  - [Mode Selection (`--mode`, `-m`)](#mode-selection---mode--m)
+  - [Directory Selection (`--directory`, `-dir`)](#directory-selection---directory--dir)
+  - [File Exclusion (`--exclude`, `-ex`)](#file-exclusion---exclude--ex)
+  - [Individual File Processing (`--file`, `-f`)](#individual-file-processing---file--f)
+  - [File Ordering (`--order`, `-ord`)](#file-ordering---order--ord)
+  - [Processing Priority (`--priority`, `-pr`)](#processing-priority---priority--pr)
+  - [Recursive Directory Processing (`--walk`, `-wl`)](#recursive-directory-processing---walk--wl)
+  - [Output File (`--outputFile`, `-of`)](#output-file---outputfile--of)
+  - [Output Directory (`--outputDir`, `-od`)](#output-directory---outputdir--od)
+  - [Show Files Preview (`--showFiles`, `-sf`)](#show-files-preview---showfiles--sf)
+  - [Keep Temporary Directory (`--keepDir`, `-ke`)](#keep-temporary-directory---keepdir--ke)
+- [Common Use Cases](#common-use-cases)
+  - [Basic PDF Merge](#basic-pdf-merge)
+  - [Merge with Custom Output](#merge-with-custom-output)
+  - [Convert and Merge Mixed Files](#convert-and-merge-mixed-files)
+  - [Process Specific Files Only](#process-specific-files-only)
+  - [Recursive Directory Processing](#recursive-directory-processing-1)
+  - [Complex Multi-Directory Operation](#complex-multi-directory-operation)
+  - [Preview Before Processing](#preview-before-processing)
+  - [Debug Conversion Issues](#debug-conversion-issues)
+- [File Type Support](#file-type-support)
+- [Tips and Best Practices](#tips-and-best-practices)
+- [Default Behavior](#default-behavior)
+- [Error Handling](#error-handling)
+- [⚙️ Some Points to Note](#️-some-points-to-note)
+- [Some ScreenShots to help you out](#some-screenshots-to-help-you-out)
+
+---
+
 ## What is Iunctura?
 It is a comprehensive tool to merge and convert PDF files in directories with flexible options for file handling and organization.
 
@@ -401,4 +439,3 @@ Make sure all specified paths exist and are accessible before running the progra
   |Alter Order of Operation Of Files | ![.](./media/10.png) | 
   |Change Priority Of Operation, Between Directory and File| ![.](./media/11.png) |
   |Keeping Temporary Directory And It's Renaming | ![.](./media/12_1.png) ![.](./media/12_2.png)
-
