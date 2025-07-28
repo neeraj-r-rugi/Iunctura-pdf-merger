@@ -23,7 +23,7 @@ import shutil
 #Source files
 import src.process as util
 import src.files as files
-import conversion as converter
+import src.conversion as converter
 import src.errors as error
 
 def init_parser()->argparse.ArgumentParser:
