@@ -53,9 +53,12 @@ Iunctura is a command-line utility that can:
 
 ## Requirements:
 - All `Python` Modules from `requirments.txt`.
-- LibreOffice for Converting Files[Maybe left as optional if you do not intend to convert any files].
-- Version of Python: `Python 3.12` or Higher as `match` case is used. And Advanced PEP-7 `f-strings` parser.
-  - Use: `py -3.12` or `py -3.13` intsead of `python` or `python3` if you have two different versions of python and do not want to change to the newer version downloaded. 
+- **LibreOffice** (optional, required only for file conversion):  
+  Needed if you plan to convert non-PDF files (e.g., `.docx`, `.pptx`) to PDF. If you only want to merge existing PDFs, LibreOffice is not required.
+
+- **Python Version:**  
+  Requires **Python 3.12** or higher (uses `match` statements and advanced PEP-7 f-string features).  
+  - If you have multiple Python versions installed, use `py -3.12` or `py -3.13` instead of `python` or `python3` to ensure the correct version is used. 
 
 ## Basic Usage
 Note: All Examples shown on Linux Machine.
