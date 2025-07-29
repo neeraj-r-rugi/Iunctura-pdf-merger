@@ -54,7 +54,8 @@ Iunctura is a command-line utility that can:
 ## Requirements:
 - All `Python` Modules from `requirments.txt`.
 - LibreOffice for Converting Files[Maybe left as optional if you do not intend to convert any files].
-- Version of Python: `Python 3.10` or Higher as `match` case is used.
+- Version of Python: `Python 3.12` or Higher as `match` case is used. And Advanced PEP-7 `f-strings` parser.
+  - Use: `py -3.12` or `py -3.13` intsead of `python` or `python3` if you have two different versions of python and do not want to change to the newer version downloaded. 
 
 ## Basic Usage
 Note: All Examples shown on Linux Machine.
