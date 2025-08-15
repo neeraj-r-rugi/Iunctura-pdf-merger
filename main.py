@@ -147,7 +147,7 @@ def main() -> None:
                                                 user_args["walk"], user_args["order"], 
                                                 user_args["execlude"], user_args["priority"])
             filtered_paths = converter.convert_to_pdf(all_files, user_args["outputDir"])
-            all_files = files.merge_filtered_path(all_files, filtered_paths)
+            all_files = files.merge_filtered_path(all_files, filtered_paths, user_args["order"])
             pdf_files = [file for file in all_files if Path(file).suffix.lower() == ".pdf"]
             if(not user_args["showFiles"]):
                 converter.save_as_pdf(pdf_files, user_args["outputFile"])

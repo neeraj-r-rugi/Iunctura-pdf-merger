@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from pathlib import Path
+from main import natural_key
 
 def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path:list, priority:str) ->tuple:
     try:
@@ -28,9 +29,9 @@ def get_pdf_files(path: str, extra_files: list, walk:str, sort:str, exclude_path
                     pdf_files += [str(f) for f in Path(dir).glob('*.pdf') if f.is_file()]
             
             if(sort == "asec"):
-                pdf_files = sorted(pdf_files, key=lambda f: Path(f).name.lower())
+                pdf_files = sorted(pdf_files, key=natural_key)
             elif(sort == "desc"):
-                pdf_files = sorted(pdf_files, key=lambda f: Path(f).name.lower(),reverse=True)
+                pdf_files = sorted(pdf_files, key=natural_key, reverse=True)
             else:
                 pass
     
@@ -63,9 +64,9 @@ def get_all_files(path: list, extra_files: list, walk:str, sort:str, exclude_pat
                     all_files += [str(f) for f in Path(dir).glob('*') if f.is_file()]
             
             if(sort == "asec"):
-                all_files = sorted(all_files, key=lambda f: Path(f).name.lower())
+                all_files = sorted(all_files, key=natural_key)
             elif(sort == "desc"):
-                all_files = sorted(all_files, key=lambda f: Path(f).name.lower(), reverse=True)
+                all_files = sorted(all_files, key=natural_key, reverse=True)
             else:
                 pass
         
@@ -83,9 +84,8 @@ def get_all_files(path: list, extra_files: list, walk:str, sort:str, exclude_pat
     return (all_files)
 
 
-def merge_filtered_path(all_files: list, filtered_paths: list) -> list:
+def merge_filtered_path(all_files: list, filtered_paths: list, sort: str) -> list:
     try:
-
         path_map = {
             Path(p).stem.lower(): p
             for p in filtered_paths
@@ -96,18 +96,22 @@ def merge_filtered_path(all_files: list, filtered_paths: list) -> list:
         for file in all_files:
             path = Path(file)
             if path.suffix.lower() != ".pdf":
-                # This was a converted file, try to replace it
                 replacement = path_map.get(path.stem.lower(), file)
                 result.append(replacement)
             else:
-                # Already a .pdf — keep as is
                 result.append(file)
 
+        # Ensure natural order for final result
+        if(sort == "asec"):
+                all_files = sorted(all_files, key=natural_key)
+        elif(sort == "desc"):
+            all_files = sorted(all_files, key=natural_key, reverse=True)
+        else:
+            pass
         return result
     except Exception as e:
         print(f"Failed to merge and filter files: {e}")
         return all_files
-        
-    
 
-    
+
+
