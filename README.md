@@ -142,7 +142,7 @@ ALLOWED_FORMATS = [
     ".xls", ".xlsx", ".ods", ".csv", ".fods",
     
     # Presentations
-    ".ppt", ".pptx", ".odp", ".fodp",
+    ".ppt", ".pptx", ".odp", ".fodp", ".pps", ".ppsx",
     
     # Drawings
     ".odg", ".fodg", ".svg", ".emf", ".wmf",
