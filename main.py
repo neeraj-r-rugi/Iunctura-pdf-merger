@@ -19,12 +19,20 @@
 import argparse
 from pathlib import Path
 import shutil
+import re
 
 #Source files
 import src.process as util
 import src.files as files
 import src.conversion as converter
 import src.errors as error
+
+def natural_key(f):
+    # Converts filename into a list of strings/ints for natural sorting
+    return [
+        int(text) if text.isdigit() else text.lower()
+        for text in re.split(r'(\d+)', Path(f).name)
+    ]
 
 def init_parser()->argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pdfMerger", description="A tool to merge or convert PDF's in a directory")
@@ -103,9 +111,9 @@ def main() -> None:
     #sort files provided via the `files` parameter
     try:
         if(user_args["order"] == "asec"):
-            user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower())
+            user_args["file"] = sorted(user_args["file"], key=natural_key)
         elif(user_args["order"] == "desc"):
-            user_args["file"] = sorted(user_args["file"], key=lambda f: Path(f).name.lower(), reverse=True)
+            user_args["file"] = sorted(user_args["file"], key=natural_key, reverse=True)
         else:
             pass
     except Exception as e:
