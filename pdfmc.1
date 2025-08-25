@@ -1,0 +1,186 @@
+.TH IUNCTURA 1 "2025-08-25" "Iunctura PDF Merger" "User Commands"
+.SH NAME
+iunctura \- merge and convert PDF files with flexible file handling
+.SH SYNOPSIS
+.B iunctura
+[\fIOPTION\fR]...
+.br
+.B python3 main.py
+[\fIOPTION\fR]...
+.SH DESCRIPTION
+.B Iunctura
+is a command-line utility that can merge multiple PDF files into a single document, convert non-PDF files to PDF format, and combine conversion and merging operations. It can process files from specific directories or individual files and handle subdirectories recursively.
+.PP
+The tool provides flexible options for file handling and organization, making it ideal for combining lecture slides, reports, and other document collections.
+.SH OPTIONS
+.TP
+.BR \-m ", " \-\-mode " " \fIMODE\fR
+Controls the primary operation mode. Valid modes are:
+.RS
+.TP
+.B merge
+(default) Merge all PDF files in the specified location
+.TP
+.B conv
+Convert all non-PDF files to PDF format
+.TP
+.B convmerge
+Convert any non-PDF files to PDF and then merge all files
+.RE
+.TP
+.BR \-dir ", " \-\-directory " " \fIDIR\fR...
+Specify one or more directories to process. Accepts multiple directory paths. Default is current directory.
+.TP
+.BR \-ex ", " \-\-exclude " " \fIFILE\fR...
+Exclude specific files from processing. Performs checks based on file name - if two files of the same name exist in different directories, both will be excluded.
+.TP
+.BR \-f ", " \-\-file " " \fIFILE\fR...
+Process individual files. Can be combined with directories or used alone (set directory to "" to process only specified files).
+.TP
+.BR \-ord ", " \-\-order " " \fIORDER\fR
+Control the order of file processing during merging:
+.RS
+.TP
+.B none
+(default) System-determined order
+.TP
+.B asec
+Ascending order by filename (A to Z)
+.TP
+.B desc
+Descending order by filename (Z to A)
+.RE
+.TP
+.BR \-pr ", " \-\-priority " " \fIPRIORITY\fR
+When both \fB\-\-file\fR and \fB\-\-directory\fR are specified, determines processing order:
+.RS
+.TP
+.B dir
+(default) Process directory files first, then individual files
+.TP
+.B file
+Process individual files first, then directory files
+.RE
+.TP
+.BR \-wl ", " \-\-walk
+Enable recursive processing of subdirectories.
+.TP
+.BR \-of ", " \-\-outputFile " " \fIFILE\fR
+Specify the name and path for the merged output PDF file. Default is "./pdfmc_merged.pdf".
+.TP
+.BR \-od ", " \-\-outputDir " " \fIDIR\fR
+Specify the directory for temporary files and conversion outputs. Default is "./temp/".
+.TP
+.BR \-sf ", " \-\-showFiles
+Display all files and the order in which they would be processed without performing any actual operations. Useful for testing and verification.
+.TP
+.BR \-ke ", " \-\-keepDir
+Preserve the temporary output directory used during conversion and merge operations instead of cleaning it up automatically.
+.SH SUPPORTED FILE FORMATS
+.B PDF files
+are directly merged in merge mode.
+.PP
+.B Non-PDF files
+supported for conversion include:
+.PP
+.B Text Documents:
+.doc, .docx, .odt, .rtf, .txt, .fodt, .html, .htm
+.PP
+.B Spreadsheets:
+.xls, .xlsx, .ods, .csv, .fods
+.PP
+.B Presentations:
+.ppt, .pptx, .odp, .fodp, .pps, .ppsx
+.PP
+.B Drawings:
+.odg, .fodg, .svg, .emf, .wmf
+.PP
+.B Other Formats:
+.xml, .xhtml, .epub
+.SH REQUIREMENTS
+.TP
+.B Python 3.12+
+Required for advanced language features
+.TP
+.B LibreOffice
+Required for file conversion (optional for PDF-only merging). The tool uses the 'soffice' command in headless mode.
+.SH EXAMPLES
+.TP
+.B Basic PDF merge:
+iunctura
+.TP
+.B Merge with custom output:
+iunctura \-\-outputFile monthly_reports.pdf
+.TP
+.B Convert and merge mixed files:
+iunctura \-\-mode convmerge \-\-directory ./mixed_docs/
+.TP
+.B Process specific files only:
+iunctura \-\-directory "" \-\-file cover.pdf intro.pdf chapter1.pdf
+.TP
+.B Recursive processing with exclusions:
+iunctura \-\-walk \-\-exclude draft.pdf temp.pdf
+.TP
+.B Preview files without processing:
+iunctura \-\-showFiles \-\-directory ./reports/ \-\-order asec
+.TP
+.B Complex multi-directory operation:
+iunctura \-m convmerge \-dir ./reports/ ./presentations/ \-wl \-ex template.docx \-ord asec \-of comprehensive_merge.pdf
+.SH DEFAULT BEHAVIOR
+When run without arguments, iunctura will:
+.IP \(bu 2
+Use merge mode
+.IP \(bu 2
+Process the current directory
+.IP \(bu 2
+Use system-determined file order
+.IP \(bu 2
+Prioritize directory processing over individual files
+.IP \(bu 2
+Not walk subdirectories
+.IP \(bu 2
+Output to "./pdfmc_merged.pdf"
+.IP \(bu 2
+Use "./temp/" as temporary directory
+.SH TIPS AND BEST PRACTICES
+.IP \(bu 2
+Use descriptive names for output files
+.IP \(bu 2
+Prefix filenames with numbers for specific ordering (e.g., 1_intro.pdf, 2_chapter.pdf)
+.IP \(bu 2
+Use \fB\-\-showFiles\fR first to verify file selection and order
+.IP \(bu 2
+Use Unix-style paths with forward slashes for better cross-platform compatibility
+.IP \(bu 2
+Backup original files before processing
+.IP \(bu 2
+Use \fB\-\-keepDir\fR for debugging conversion issues
+.SH NOTES
+.IP \(bu 2
+Files with the same name may be overwritten during conversion as all names are normalized to PDF format internally
+.IP \(bu 2
+LibreOffice must be installed and 'soffice' must be in PATH for file conversion
+.IP \(bu 2
+The tool performs validation for directory existence, file path validity, and PDF extension enforcement
+.SH EXIT STATUS
+.TP
+.B 0
+Success
+.TP
+.B 1
+General error (invalid arguments, file not found, etc.)
+.SH FILES
+.TP
+.I ./pdfmc_merged.pdf
+Default output file
+.TP
+.I ./temp/
+Default temporary directory
+.SH SEE ALSO
+.BR libreoffice (1),
+.BR soffice (1),
+.BR python3 (1)
+.SH AUTHOR
+Written for the Iunctura PDF Merger project.
+.SH REPORTING BUGS
+Check the project documentation for troubleshooting and support information.
