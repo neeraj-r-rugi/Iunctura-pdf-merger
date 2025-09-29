@@ -38,6 +38,19 @@ ALLOWED_FORMATS = [
     ".xml", ".xhtml", ".epub",
 ]
 
+#Overlaps do exist between Pandoc and Soffice, But Overlapped files are always handled by Soffice
+PANDOC_FORMATS = [
+    ".md", ".markdown", ".mdown", ".mkd", ".mkdn",
+    ".rst", ".html", ".htm", ".tex", ".latex",
+    ".ipynb", ".docx", ".odt", ".epub", ".fb2",
+    ".docbook", ".xml", ".json", ".bib", ".bibtex",
+    ".csljson", ".cslyaml", ".csv", ".tsv", ".opml",
+    ".org", ".textile", ".t2t", ".mediawiki", ".muse",
+    ".tikiwiki", ".twiki", ".vimwiki", ".jira", ".man",
+    ".ms", ".tei", ".texi", ".plain", ".pptx",
+    ".s5", ".slidy", ".slideous", ".revealjs", ".rtf"
+]
+
 def save_as_pdf(files: list, output_name:str):
     if(files):
         merger = pdf.PdfWriter()
@@ -49,13 +62,14 @@ def save_as_pdf(files: list, output_name:str):
     
 def convert_to_pdf(paths: list, output_dir: str)-> tuple:
     soffice = process.get_soffice_path()
+    pandoc = process.get_pandoc_path()
     if not soffice:
         raise error.sofficeNotPresentError("Fatal Error: LibreOffice 'soffice' not found on your system.\nVerify if it exists on your PATH.")
 
     filtered_paths = []
     for item in paths:
         file = Path(item)
-        if file.suffix.lower() in ALLOWED_FORMATS:
+        if file.suffix.lower() in (ALLOWED_FORMATS+PANDOC_FORMATS):
             filtered_paths.append(file)
         else:
            pass
@@ -67,17 +81,23 @@ def convert_to_pdf(paths: list, output_dir: str)-> tuple:
     
     temp_dir = Path(output_dir)
     temp_dir.mkdir(exist_ok=True, parents= True)
-    print(f"Output for Conversion of files to PDF from LibreOffice:\n{"#"*50}")
+    print(f"Output for Conversion of files to PDF from LibreOffice and/Or Pandoc:\n{"#"*50}")
     for input_path in filtered_paths:
         try:
-            subprocess.run([
-                soffice, "--headless", "--convert-to", "pdf",
-                str(input_path), "--outdir", str(temp_dir)
-            ], check=True)
-            print(f"-------> [Converted] {input_path} to PDF\n{"*"*75}")
+            if input_path.suffix.lower() in ALLOWED_FORMATS:
+                subprocess.run([
+                    soffice, "--headless", "--convert-to", "pdf",
+                    str(input_path), "--outdir", str(temp_dir)
+                ], check=True)
+                print(f"-------> [Converted] {input_path} to PDF\n{"*"*75}")
+            else:
+                subprocess.run([
+                    pandoc, str(input_path), "--output", (str(temp_dir)+'/'+str(input_path.stem)+".pdf"), '--pdf-engine=wkhtmltopdf'
+                ], check=True)
+                print(f"-------> [Converted] {input_path} to PDF\n{"*"*75}")
         except subprocess.CalledProcessError as e:
             print(f"Error converting `{input_path}`: {e}")
-            raise error.failedToConvertToPDFError(f"Soffice Conversion Failure")  
+            raise error.failedToConvertToPDFError(f"Conversion Failure")  
             
     temp = []
     

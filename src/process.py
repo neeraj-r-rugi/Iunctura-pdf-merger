@@ -91,3 +91,41 @@ def get_soffice_path() -> str | None:
             return str(path)
 
     return None
+
+
+def get_pandoc_path() -> str | None:
+    """
+    Try to find the 'pandoc' executable on the current system.
+    Returns full path or None if not found.
+    """
+    # Try using the PATH first
+    pandoc = shutil.which("pandoc")
+    if pandoc:
+        return pandoc
+
+    # Try platform-specific defaults
+    system = platform.system()
+    if system == "Windows":
+        possible_paths = [
+            Path("C:/Program Files/Pandoc/pandoc.exe"),
+            Path("C:/Program Files (x86)/Pandoc/pandoc.exe"),
+        ]
+    elif system == "Darwin":  # macOS
+        possible_paths = [
+            Path("/usr/local/bin/pandoc"),
+            Path("/opt/homebrew/bin/pandoc"),  # Homebrew (Apple Silicon)
+            Path("/usr/bin/pandoc"),
+        ]
+    elif system == "Linux":
+        possible_paths = [
+            Path("/usr/bin/pandoc"),
+            Path("/usr/local/bin/pandoc"),
+        ]
+    else:
+        return None
+
+    for path in possible_paths:
+        if path.exists():
+            return str(path)
+
+    return None

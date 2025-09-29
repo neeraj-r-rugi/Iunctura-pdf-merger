@@ -55,6 +55,9 @@ Iunctura is a command-line utility that can:
 - All `Python` Modules from `requirments.txt`.
 - **LibreOffice** (optional, required only for file conversion):  
   Needed if you plan to convert non-PDF files (e.g., `.docx`, `.pptx`) to PDF. If you only want to merge existing PDFs, LibreOffice is not required.
+- **Pandoc** (Optional, required for web files, like markdowns):
+  Needed if you plan to convert non-PDF files Like markdowns. Refer to the below allowed formats
+  section to see which files those are.
 
 - **Python Version:**  
   Requires **Python 3.12** or higher (uses `match` statements and advanced PEP-7 f-string features).  
@@ -150,6 +153,19 @@ ALLOWED_FORMATS = [
     # Other Office Formats
     ".xml", ".xhtml", ".epub",
 ]
+
+PANDOC_FROMATS = [
+    ".md", ".markdown", ".mdown", ".mkd", ".mkdn",
+    ".rst", ".html", ".htm", ".tex", ".latex",
+    ".ipynb", ".docx", ".odt", ".epub", ".fb2",
+    ".docbook", ".xml", ".json", ".bib", ".bibtex",
+    ".csljson", ".cslyaml", ".csv", ".tsv", ".opml",
+    ".org", ".textile", ".t2t", ".mediawiki", ".muse",
+    ".tikiwiki", ".twiki", ".vimwiki", ".jira", ".man",
+    ".ms", ".tei", ".texi", ".plain", ".pptx",
+    ".s5", ".slidy", ".slideous", ".revealjs", ".rtf"
+]
+
 ```
 
 ### Directory Selection (`--directory`, `-dir`)
@@ -409,12 +425,14 @@ Make sure all specified paths exist and are accessible before running the progra
 
 ## ⚙️ Some Points to Note:
 
-- 📝 **PDF Conversion Requires LibreOffice**  
+- 📝 **PDF Conversion Requires LibreOffice and Pandoc**  
   While this tool can merge PDF files out of the box, converting other file types (such as `.docx`, `.odt`, `.txt`, etc.) to PDF requires the **LibreOffice suite** to be installed on your system.  
   The tool uses the `soffice` command in **headless mode** via `subprocess`.  
   - Ensure `libreoffice` or `soffice` is in your system's `PATH`.
   - Uses: `soffice --headless --convert-to pdf <input-file> --outdir <output-dir>`
   - To install using apt: `sudo apt install libreoffice` for windows install from the official LibreOffice Website!: https://www.libreoffice.org/download/download-libreoffice/
+  The tool also uses `pandoc` command for converting web files.
+  - Refer Here for more info: https://pandoc.org/
 
 - 🔢 **Ordering Merged Files**  
   To merge files in a specific order from a directory, it's recommended to **prefix filenames with numbers**.  
