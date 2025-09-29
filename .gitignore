@@ -3,3 +3,4 @@ venv/
 ./test/
 ./Merged.pdf
 ./pdfmc_merged.pdf
+./__pycache__/
